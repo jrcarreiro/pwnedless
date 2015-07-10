@@ -1,9 +1,9 @@
 #!/bin/bash
 ##############################################
-#   										 #
+#   					     #
 #    Script para execucao de hardering       #
-#    		S.O (RedHat/CentOS)              #
-#											 #
+#    		S.O (RedHat/CentOS)          #
+#					     #
 ##############################################
 
 echo "##############################################"
@@ -134,8 +134,8 @@ echo ""
 echo ""
 echo "##############################################"
 echo "###    Criar uma lista com os softwares    ###"
-echo "###	 a serem desistalados, dentro de     ###"
-echo "###	 /tmp/soft.lst         				 ###"
+echo "###	 a serem desistalados, dentro de ###"
+echo "###	 /tmp/soft.lst         		 ###"
 echo "##############################################"
 
 
@@ -738,7 +738,7 @@ ls -l $dir | awk '{print $1, $3, $4, $9}'
 sleep 2
 
 echo "################################################################"
-echo "###         Disable services 												      ######"
+echo "###         Disable services 			        ######"
 echo "################################################################"
 echo "Desabilitando NFS"
 chkconfig nfslock off 2> /dev/null
@@ -757,7 +757,7 @@ chkconfig cups off 2> /dev/null
 sleep 2
 
 echo "################################################################"
-echo "###         Password configuration									      ######"
+echo "###         Password configuration		        ######"
 echo "################################################################"
 echo ""
 
