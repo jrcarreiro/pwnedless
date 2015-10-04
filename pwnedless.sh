@@ -851,12 +851,12 @@ echo "Set Default umask for Users"
 sleep 2
 grep "^umask 077" /etc/bashrc > /dev/null
 parametro=`echo $?`
-	if test $parametro = 0
+	if test $parametro = 1
 		then
 			echo "Parametro correto"
 		else
-			echo "#Set Default umask for Users" >> /etc/bashrc
-			echo "umask 077" >> /etc/bashrc
+			sed -i 's/umask 022/umask 077/g' /etc/bashrc
+			sed -i 's/umask 002/umask 077/g' /etc/bashrc
 			echo "Parametro corrigido"
 	fi
 
