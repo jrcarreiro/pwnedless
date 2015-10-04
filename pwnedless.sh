@@ -314,9 +314,190 @@ echo "-w /sbin/modprobe -p x -k modules" >> /etc/audit/audit.rules
 echo "-a always,exit -F arch=b64 -S init_module -S delete_module -k modules" >> /etc/audit/audit.rules
 echo "" >> /etc/audit/audit.rules
 
-echo "Make the Audit Configuration Immutable"
+echo "#Audit the audit logs" >> /etc/audit/audit.rules
 sleep 2
-echo "#Make the Audit Configuration Immutable" >> /etc/audit/audit.rules
+echo "-w /var/log/audit/ -k auditlog" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Modifications to audit configuration that occur while the audit (check your paths)" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/audit/ -p wa -k auditconfig" >> /etc/audit/audit.rules
+echo "-w /etc/libaudit.conf -p wa -k auditconfig" >> /etc/audit/audit.rules
+echo "-w /etc/audisp/ -p wa -k audispconfig" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Monitor for use of audit management tools" >> /etc/audit/audit.rules
+sleep 2
+echo "# Check your paths" >> /etc/audit/audit.rules
+echo "-w /sbin/auditctl -p x -k audittools" >> /etc/audit/audit.rules
+echo "-w /sbin/auditd -p x -k audittools" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Special files" >> /etc/audit/audit.rules
+sleep 2
+echo "-a exit,always -F arch=b32 -S mknod -S mknodat -k specialfiles" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S mknod -S mknodat -k specialfiles" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Mount operations" >> /etc/audit/audit.rules
+sleep 2
+echo "-a exit,always -F arch=b32 -S mount -S umount -S umount2 -k mount" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S mount -S umount2 -k mount" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Changes to the time" >> /etc/audit/audit.rules
+sleep 2
+echo "-a exit,always -F arch=b32 -S adjtimex -S settimeofday -S stime -S clock_settime -k time" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S adjtimex -S settimeofday -S clock_settime -k time" >> /etc/audit/audit.rules
+echo "-w /etc/localtime -p wa -k localtime" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Use of stunnel" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /usr/sbin/stunnel -p x -k stunnel" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Schedule jobs" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/cron.allow -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/cron.deny -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/cron.d/ -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/cron.daily/ -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/cron.hourly/ -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/cron.monthly/ -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/cron.weekly/ -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /etc/crontab -p wa -k cron" >> /etc/audit/audit.rules
+echo "-w /var/spool/cron/crontabs/ -k cron" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "## user, group, password databases" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/group -p wa -k etcgroup" >> /etc/audit/audit.rules
+echo "-w /etc/passwd -p wa -k etcpasswd" >> /etc/audit/audit.rules
+echo "-w /etc/gshadow -k etcgroup" >> /etc/audit/audit.rules
+echo "-w /etc/shadow -k etcpasswd" >> /etc/audit/audit.rules
+echo "-w /etc/security/opasswd -k opasswd" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Monitor usage of passwd command" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /usr/bin/passwd -p x -k passwd_modification" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Monitor user/group tools" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /usr/sbin/groupadd -p x -k group_modification" >> /etc/audit/audit.rules
+echo "-w /usr/sbin/groupmod -p x -k group_modification" >> /etc/audit/audit.rules
+echo "-w /usr/sbin/addgroup -p x -k group_modification" >> /etc/audit/audit.rules
+echo "-w /usr/sbin/useradd -p x -k user_modification" >> /etc/audit/audit.rules
+echo "-w /usr/sbin/usermod -p x -k user_modification" >> /etc/audit/audit.rules
+echo "-w /usr/sbin/adduser -p x -k user_modification" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Login configuration and stored info" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/login.defs -p wa -k login" >> /etc/audit/audit.rules
+echo "-w /etc/securetty -p wa -k login" >> /etc/audit/audit.rules
+echo "-w /var/log/faillog -p wa -k login" >> /etc/audit/audit.rules
+echo "-w /var/log/lastlog -p wa -k login" >> /etc/audit/audit.rules
+echo "-w /var/log/tallylog -p wa -k login" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Network configuration" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/hosts -p wa -k hosts" >> /etc/audit/audit.rules
+echo "-w /etc/network/ -p wa -k network" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "## system startup scripts" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/inittab -p wa -k init" >> /etc/audit/audit.rules
+echo "-w /etc/init.d/ -p wa -k init" >> /etc/audit/audit.rules
+echo "-w /etc/init/ -p wa -k init" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Library search paths" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/ld.so.conf -p wa -k libpath" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Kernel parameters and modules" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/sysctl.conf -p wa -k sysctl" >> /etc/audit/audit.rules
+echo "-w /etc/modprobe.conf -p wa -k modprobe" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+
+echo "# PAM configuration" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/pam.d/ -p wa -k pam" >> /etc/audit/audit.rules
+echo "-w /etc/security/limits.conf -p wa  -k pam" >> /etc/audit/audit.rules
+echo "-w /etc/security/pam_env.conf -p wa -k pam" >> /etc/audit/audit.rules
+echo "-w /etc/security/namespace.conf -p wa -k pam" >> /etc/audit/audit.rules
+echo "-w /etc/security/namespace.init -p wa -k pam" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+
+echo "# Postfix configuration" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/aliases -p wa -k mail" >> /etc/audit/audit.rules
+echo "-w /etc/postfix/ -p wa -k mail" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+
+echo "# SSH configuration" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/ssh/sshd_config -k sshd" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Hostname" >> /etc/audit/audit.rules
+sleep 2
+echo "-a exit,always -F arch=b32 -S sethostname -k hostname" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S sethostname -k hostname" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Changes to issue" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /etc/issue -p wa -k etcissue" >> /etc/audit/audit.rules
+echo "-w /etc/issue.net -p wa -k etcissue" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Log all commands executed by root" >> /etc/audit/audit.rules
+sleep 2
+echo "-a exit,always -F arch=b64 -F euid=0 -S execve -k rootcmd" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b32 -F euid=0 -S execve -k rootcmd" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "## Capture all failures to access on critical elements" >> /etc/audit/audit.rules
+sleep 2
+echo "-a exit,always -F arch=b64 -S open -F dir=/etc -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/bin -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/home -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/sbin -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/srv -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/usr/bin -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/usr/local/bin -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/usr/sbin -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "-a exit,always -F arch=b64 -S open -F dir=/var -F success=0 -k unauthedfileacess" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "## su/sudo" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /bin/su -p x -k priv_esc" >> /etc/audit/audit.rules
+echo "-w /usr/bin/sudo -p x -k priv_esc" >> /etc/audit/audit.rules
+echo "-w /etc/sudoers -p rw -k priv_esc" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Poweroff/reboot tools" >> /etc/audit/audit.rules
+sleep 2
+echo "-w /sbin/halt -p x -k power" >> /etc/audit/audit.rules
+echo "-w /sbin/poweroff -p x -k power" >> /etc/audit/audit.rules
+echo "-w /sbin/reboot -p x -k power" >> /etc/audit/audit.rules
+echo "-w /sbin/shutdown -p x -k power" >> /etc/audit/audit.rules
+echo "" >> /etc/audit/audit.rules
+
+echo "# Make the configuration immutable" >> /etc/audit/audit.rules
+sleep 2
 echo "-e 2" >> /etc/audit/audit.rules
 echo "" >> /etc/audit/audit.rules
 
@@ -663,8 +844,8 @@ echo "Fazendo reload do servico SSH"
 echo "##############################################"
 echo "###     User Accounts and Environment      ###"
 echo "##############################################"
-#!echo "Disable System Accounts"
-#egrep -v "^\+" /etc/passwd | awk -F: '($1!="root" && $1!="sync" && $1!="shutdown" && $1!="halt" && $3<500 && $7!="/sbin/nologin") {print}'
+echo "Disable System Accounts"
+egrep -v "^\+" /etc/passwd | awk -F: '($1!="root" && $1!="sync" && $1!="shutdown" && $1!="halt" && $3<500 && $7!="/sbin/nologin") {print}'
 
 echo "Set Default umask for Users"
 sleep 2
@@ -681,13 +862,13 @@ parametro=`echo $?`
 
 grep "^umask 077" /etc/profile > /dev/null
 parametro=`echo $?`
-	if test $parametro = 0
+	if test $parametro = 1
 		then
 			echo "Parametro correto"
 		else
-			echo "#Set Default umask for Users" >> /etc/profile
-			echo "umask 077" >> /etc/profile
-			echo "Parametro corrigido"
+			sed -i 's/umask 022/umask 077/g' /etc/profile
+                        sed -i 's/umask 002/umask 077/g' /etc/profile
+                        echo "Parametro corrigido"
 	fi
 
 echo "Permissions on /etc/passwd"
