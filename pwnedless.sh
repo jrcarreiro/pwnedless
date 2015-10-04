@@ -5,6 +5,11 @@
 #    	S.O (RedHat/CentOS		     #
 #					     #
 ##############################################
+echo "##############################################"
+echo "###	installing pre requirements	 ###"
+echo "##############################################"
+yum install yum-plugin-security yum-utils ed
+
 
 echo "##############################################"
 echo "###         Secure Boot Settings           ###"
