@@ -8,7 +8,7 @@
 echo "##############################################"
 echo "###	installing pre requirements	 ###"
 echo "##############################################"
-yum install yum-plugin-security yum-utils ed
+yum install yum-plugin-security yum-utils ed sysstat
 
 
 echo "##############################################"
