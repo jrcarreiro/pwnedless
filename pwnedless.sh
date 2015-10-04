@@ -1,8 +1,8 @@
 #!/bin/bash
 ##############################################
 #   					     #
-#    Script para execucao de hardering       #
-#    		S.O (RedHat/CentOS)          #
+#    	Script for  hardening		     #
+#    	S.O (RedHat/CentOS		     #
 #					     #
 ##############################################
 
@@ -15,10 +15,10 @@ stat -L -c "%u %g" /etc/grub.conf | egrep "0 0" > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permission OK"
 		else
 			chown root:root /etc/grub.conf
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -27,10 +27,10 @@ stat -L -c "%a" /etc/grub.conf | egrep ".00" > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permission OK"
 		else
 			chmod og-rwx /etc/grub.conf
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 echo ""
 
@@ -38,7 +38,7 @@ echo "##############################################"
 echo "###     Additional Process Hardening       ###"
 echo "##############################################"
 
-echo "Criando copias de seguranca"
+echo "Create a copy of file"
 ls -l /etc/security/limits.conf.original > /dev/null 2> /dev/null
 existe=`echo $?`
 	if test $existe = 0
@@ -158,10 +158,6 @@ done
 echo "Configure Network Time Protocol (NTP)"
 echo "*/5 * * * * root /usr/sbin/ntpdate a.ntp.br 1> /dev/null 2> /dev/null" >  /etc/cron.d/ntpdate
 
-#!echo "Configure Mail Transfer Agent for Local-Only Mode"
-#netstat -an | grep LIST | grep ":25[[:space:]]"
-
-#echo >> "inet_interfaces = localhost" >> /etc/postfix/main.cf
 
 echo "##############################################"
 echo "###         Logging and Auditing           ###"
@@ -457,11 +453,11 @@ stat -L -c "%a %u %g" /etc/anacrontab | egrep ".00 0 0" > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/anacrontab
 			chmod og-rwx /etc/anacrontab
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -472,11 +468,11 @@ stat -L -c "%a %u %g" /etc/crontab | egrep ".00 0 0" > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/crontab
 			chmod og-rwx /etc/crontab
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -487,11 +483,11 @@ stat -L -c "%a %u %g" /etc/cron.hourly | egrep ".00 0 0" > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/cron.hourly
 			chmod og-rwx /etc/cron.hourly
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -502,11 +498,11 @@ stat -L -c "%a %u %g" /etc/cron.daily | egrep ".00 0 0"  > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/cron.daily
 			chmod og-rwx /etc/cron.daily
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -517,11 +513,11 @@ stat -L -c "%a %u %g" /etc/cron.weekly | egrep ".00 0 0"  > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/cron.weekly
 			chmod og-rwx /etc/cron.weekly
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -532,11 +528,11 @@ stat -L -c "%a %u %g" /etc/cron.monthly | egrep ".00 0 0"  > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/cron.monthly
 			chmod og-rwx /etc/cron.monthly
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -547,11 +543,11 @@ stat -L -c "%a %u %g" /etc/cron.d | egrep ".00 0 0"  > /dev/null
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/cron.d
 			chmod og-rwx /etc/cron.d
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
@@ -633,11 +629,11 @@ sleep 2
 permissao=`echo $?`
 	if test $permissao = 0
 		then
-			echo "Permissao correta"
+			echo "Permissions OK"
 		else
 			chown root:root /etc/ssh/sshd_config
 			chmod 600 /etc/ssh/sshd_config
-			echo "Permissao corrigida"
+			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
