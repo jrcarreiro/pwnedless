@@ -8,7 +8,7 @@
 echo "##############################################"
 echo "###	installing pre requirements	 ###"
 echo "##############################################"
-yum install yum-plugin-security yum-utils ed sysstat
+yum install yum-plugin-security yum-utils ed sysstat -y
 
 
 echo "##############################################"
@@ -17,8 +17,8 @@ echo "##############################################"
 sleep 2
 echo "Set User/Group Owner on /etc/grub.conf"
 stat -L -c "%u %g" /etc/grub.conf | egrep "0 0" > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permission OK"
 		else
@@ -29,8 +29,8 @@ permissao=`echo $?`
 echo ""
 echo "Set Permissions on /etc/grub.conf"
 stat -L -c "%a" /etc/grub.conf | egrep ".00" > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permission OK"
 		else
@@ -48,28 +48,28 @@ ls -l /etc/security/limits.conf.original > /dev/null 2> /dev/null
 existe=`echo $?`
 	if test $existe = 0
 		then
-			echo "O arquivo ja existe"
+			echo "The file already exists"
 		else
 			cp /etc/security/limits.conf{,.original}
-			echo "Arquivo criado"
+			echo "Created file"
 	fi
 
 ls -l /etc/sysctl.conf.original > /dev/null 2> /dev/null
 existe=`echo $?`
 	if test $existe = 0
 		then
-			echo "O arquivo ja existe"
+			echo "The file already exists"
 		else
 			cp /etc/sysctl.conf{,.original}
-			echo "Arquivo criado"
+			echo "Created file"
 	fi
 sleep 2
 echo "##############################################" >> /etc/security/limits.conf
-echo "###      Alteracoes de seguranca           ###" >> /etc/security/limits.conf
+echo "###      Security Changes           ###" >> /etc/security/limits.conf
 echo "##############################################" >> /etc/security/limits.conf
 echo ""
 echo "##############################################" >> /etc/sysctl.conf
-echo "###       Alteracoes de seguranca          ###" >> /etc/sysctl.conf
+echo "###       Security Changes          ###" >> /etc/sysctl.conf
 echo "##############################################" >> /etc/sysctl.conf
 echo ""
 
@@ -81,9 +81,9 @@ par_limits="hard core 0"
 
 	if test $valida_limits = 0
 		then
-			echo "O parametro ja se encontra configurado"
+			echo "The parameter is already set"
 		else
-			echo "Parametro '$par_limits' configurado no limits.conf"
+			echo "The parameter '$par_limits' configured in limits.conf"
 			echo $par_limits >> /etc/security/limits.conf
 	fi
 echo "Configurando suid_dumpable"
@@ -93,10 +93,10 @@ par_sysctl="fs.suid_dumpable = 0"
 
     if test $valida_sysctl = 0
             then
-                echo "O parametro ja se encontra configurado"
+                echo "The parameter is already set"
             else
                 sysctl -w fs.suid_dumpable=0
-				echo "Parametro '$par_sysctl' configurado no sysctl.conf"
+				echo "The parameter '$par_sysctl' configured in sysctl.conf"
 				echo $par_sysctl >> /etc/sysctl.conf
 				echo ""
 	fi
@@ -108,10 +108,10 @@ par_sysctl="kernel.exec-shield = 1"
 
     if test $valida_sysctl = 1
             then
-                echo "O parametro ja se encontra configurado"
+                echo "The parameter is already set"
             else
                 sysctl -w sysctl kernel.exec-shield=1
-				echo "Parametro '$par_sysctl' configurado no sysctl.conf"
+				echo "The parameter '$par_sysctl' configured in sysctl.conf"
 				echo $par_sysctl >> /etc/sysctl.conf
 				echo ""
 	fi
@@ -123,10 +123,10 @@ par_sysctl="kernel.randomize_va_space = 2"
 
     if test $valida_sysctl = 2
             then
-                echo "O parametro ja se encontra configurado"
+                echo "The parameter is already set"
             else
                 sysctl -w kernel.randomize_va_space=2
-				echo "Parametro '$par_sysctl' configurado no sysctl.conf"
+				echo "The parameter '$par_sysctl' configured in sysctl.conf"
 				echo $par_sysctl >> /etc/sysctl.conf
 				echo ""
 	fi
@@ -138,8 +138,8 @@ echo "##############################################"
 echo ""
 echo ""
 echo "##############################################"
-echo "###    Criar uma lista com os softwares    ###"
-echo "###	 a serem desistalados, dentro de ###"
+echo "###    Create a list of the software       ###"
+echo "###    to be uninstalled within            ###"
 echo "###	 /tmp/soft.lst         		 ###"
 echo "##############################################"
 
@@ -152,9 +152,9 @@ for soft in $(cat /tmp/soft.lst);
             if test $install = 0
                 then
                     yum remove $soft -y > /dev/null
-                        echo "'$soft' removido"
+                        echo "'$soft' removed"
                 else
-                    echo "'$soft' nao instalado"
+                    echo "'$soft' not installed"
             fi
 
 done
@@ -176,7 +176,7 @@ yum info rsyslog | grep installed > /dev/null
                     yum install rsyslog -y > /dev/null
                         echo "O rsyslog foi instalado"
                 else
-                    echo "O rsyslog se encontra instalado"
+                    echo "The rsyslog is installed"
             fi
 
 
@@ -189,20 +189,20 @@ w
 q
 END
 
-echo "Criando copias de seguranca do audit.rules"
+echo "Creating security copies of audit.rules"
 sleep 2
 ls -l /etc/audit/audit.rules.original > /dev/null 2> /dev/null
 existe=`echo $?`
 	if test $existe = 0
 		then
-			echo "O arquivo ja existe"
+			echo "The file already exists"
 		else
 			cp /etc/audit/audit.rules{,.original}
-			echo "Arquivo criado"
+			echo "Created file"
 	fi
 
 echo "##############################################" >> /etc/audit/audit.rules
-echo "###       Alteracoes de seguranca          ###" >> /etc/audit/audit.rules
+echo "###       Security Changes          ###" >> /etc/audit/audit.rules
 echo "##############################################" >> /etc/audit/audit.rules
 echo ""
 echo "Record Events That Modify Date and Time Information"
@@ -641,8 +641,8 @@ echo "##############################################"
 echo "Set User/Group Owner and Permission on /etc/anacrontab"
 sleep 2
 stat -L -c "%a %u %g" /etc/anacrontab | egrep ".00 0 0" > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -656,8 +656,8 @@ echo ""
 echo "Set User/Group Owner and Permission on /etc/crontab"
 sleep 2
 stat -L -c "%a %u %g" /etc/crontab | egrep ".00 0 0" > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -671,8 +671,8 @@ echo ""
 echo "Set User/Group Owner and Permission on /etc/cron.hourly"
 sleep 2
 stat -L -c "%a %u %g" /etc/cron.hourly | egrep ".00 0 0" > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -686,8 +686,8 @@ echo ""
 echo "Set User/Group Owner and Permission on /etc/cron.daily"
 sleep 2
 stat -L -c "%a %u %g" /etc/cron.daily | egrep ".00 0 0"  > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -701,8 +701,8 @@ echo ""
 echo "Set User/Group Owner and Permission on /etc/cron.weekly"
 sleep 2
 stat -L -c "%a %u %g" /etc/cron.weekly | egrep ".00 0 0"  > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -716,8 +716,8 @@ echo ""
 echo "Set User/Group Owner and Permission on /etc/cron.monthly"
 sleep 2
 stat -L -c "%a %u %g" /etc/cron.monthly | egrep ".00 0 0"  > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -731,8 +731,8 @@ echo ""
 echo "Set User/Group Owner and Permission on /etc/cron.d"
 sleep 2
 stat -L -c "%a %u %g" /etc/cron.d | egrep ".00 0 0"  > /dev/null
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -746,79 +746,79 @@ echo ""
 echo "##############################################"
 echo "###            Configure SSH               ###"
 echo "##############################################"
-echo "Criando copias de seguranca do sshd_config"
+echo "Creating security copies of sshd_config"
 ls -l /etc/ssh/sshd_config.original > /dev/null 2> /dev/null
 existe=`echo $?`
 	if test $existe = 0
 		then
-			echo "O arquivo ja existe"
+			echo "The file already exists"
 		else
 			cp /etc/ssh/sshd_config{,.original}
-			echo "Arquivo criado"
+			echo "Created file"
 	fi
 sleep 2
 echo "##############################################" >> /etc/ssh/sshd_config
-echo "###       Alteracoes de seguranca          ###" >> /etc/ssh/sshd_config
+echo "###       Security Changes                 ###" >> /etc/ssh/sshd_config
 echo "##############################################" >> /etc/ssh/sshd_config
 echo ""
 echo "#Set LogLevel to INFO"
 sleep 2
 grep "^LogLevel" /etc/ssh/sshd_config > /dev/null
-parametro=`echo $?`
-	if test $parametro = 0
+parameter=`echo $?`
+	if test $parameter = 0
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			echo "#Set LogLevel to INFO" >> /etc/ssh/sshd_config
 			echo "LogLevel INFO" >> /etc/ssh/sshd_config
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
 echo ""
 echo "#Disable SSH X11 Forwarding"
 sleep 2
 grep "^X11Forwarding yes" /etc/ssh/sshd_config > /dev/null
-parametro=`echo $?`
-	if test $parametro = 0
+parameter=`echo $?`
+	if test $parameter = 0
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
 echo ""
 echo "#Disable SSH Password authentication"
 sleep 2
 grep "^PasswordAuthentication yes" /etc/ssh/sshd_config > /dev/null
-parametro=`echo $?`
-	if test $parametro = 0
+parameter=`echo $?`
+	if test $parameter = 0
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
 echo ""
 echo "#Disable SSH Root Login"
 sleep 2
 grep "^PermitRootLogin yes" /etc/ssh/sshd_config > /dev/null
-parametro=`echo $?`
-	if test $parametro = 1
+parameter=`echo $?`
+	if test $parameter = 1
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
 echo ""
 
 echo "#Set Permissions on /etc/ssh/sshd_config"
 sleep 2
-permissao=`echo $?`
-	if test $permissao = 0
+permission=`echo $?`
+	if test $permission = 0
 		then
 			echo "Permissions OK"
 		else
@@ -833,17 +833,17 @@ echo "Set SSH MaxAuthTries to 4 or Less"
 sleep 2
 grep "^MaxAuthTries 4" /etc/ssh/sshd_config > /dev/null
 
-parametro=`echo $?`
-	if test $parametro = 0
+parameter=`echo $?`
+	if test $parameter = 0
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			echo "#Set SSH MaxAuthTries to 4 or Less" >> /etc/ssh/sshd_config
 			echo "MaxAuthTries 4" >> /etc/ssh/sshd_config
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
-echo "Fazendo reload do servico SSH"
+echo "Reload service SSH"
 /etc/init.d/sshd reload
 
 echo "##############################################"
@@ -855,25 +855,25 @@ egrep -v "^\+" /etc/passwd | awk -F: '($1!="root" && $1!="sync" && $1!="shutdown
 echo "Set Default umask for Users"
 sleep 2
 grep "^umask 077" /etc/bashrc > /dev/null
-parametro=`echo $?`
-	if test $parametro = 1
+parameter=`echo $?`
+	if test $parameter = 1
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			sed -i 's/umask 022/umask 077/g' /etc/bashrc
 			sed -i 's/umask 002/umask 077/g' /etc/bashrc
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
 grep "^umask 077" /etc/profile > /dev/null
-parametro=`echo $?`
-	if test $parametro = 1
+parameter=`echo $?`
+	if test $parameter = 1
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			sed -i 's/umask 022/umask 077/g' /etc/profile
                         sed -i 's/umask 002/umask 077/g' /etc/profile
-                        echo "Parametro corrigido"
+                        echo "The parameter fixed"
 	fi
 
 echo "Permissions on /etc/passwd"
@@ -927,7 +927,7 @@ sleep 2
 echo "################################################################"
 echo "###         Disable services 			        ######"
 echo "################################################################"
-echo "Desabilitando NFS"
+echo "Disabling NFS"
 chkconfig nfslock off 2> /dev/null
 chkconfig rpcgssd off 2> /dev/null
 chkconfig rpcbind off 2> /dev/null
@@ -935,11 +935,11 @@ chkconfig rpcidmapd off 2> /dev/null
 chkconfig rpcsvcgssd off 2> /dev/null
 sleep 2
 
-echo "Desabilitando firewall IPv6"
+echo "Disabling firewall IPv6"
 chkconfig ip6tables off 2> /dev/null
 sleep 2
 
-echo "Desabilitando CUPS"
+echo "Disabling CUPS"
 chkconfig cups off 2> /dev/null
 sleep 2
 
@@ -952,19 +952,19 @@ echo "Upgrade Password Hashing Algorithm to SHA-512s"
 sleep 2
 authconfig --test | grep hashing | grep sha512 > /dev/null
 
-parametro=`echo $?`
-	if test $parametro = 0
+parameter=`echo $?`
+	if test $parameter = 0
 		then
-			echo "Parametro correto"
+			echo "The parameter correct"
 		else
 			authconfig --passalgo=sha512 --update
-			echo "Parametro corrigido"
+			echo "The parameter fixed"
 	fi
 
 	echo ""
 
 	echo "##############################################" >> /etc/pam.d/system-auth
-	echo "###       Alteracoes de seguranca          ###" >> /etc/pam.d/system-auth
+	echo "###       Security Changes          ###" >> /etc/pam.d/system-auth
 	echo "##############################################" >> /etc/pam.d/system-auth
 	sleep 2
 
@@ -972,18 +972,18 @@ parametro=`echo $?`
 	sleep 2
 	grep "remember" /etc/pam.d/system-auth > /dev/null
 
-	parametro=`echo $?`
-		if test $parametro = 0
+	parameter=`echo $?`
+		if test $parameter = 0
 			then
-				echo "Parametro correto"
+				echo "The parameter correct"
 			else
 				echo "#Limit Password Reuse" >> /etc/pam.d/system-auth
 				echo "password    sufficient    pam_unix.so remember=5" >> /etc/pam.d/system-auth
-				echo "Parametro corrigido"
+				echo "The parameter fixed"
 		fi
 
 
 
 echo "################################################################"
-echo "###         Hardening efetuado com sucesso                ######"
+echo "###         Hardening successfully                        ######"
 echo "################################################################"
