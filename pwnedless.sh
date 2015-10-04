@@ -436,6 +436,11 @@ echo "net.ipv4.tcp_timestamps=0" >> /etc/sysctl.conf
 echo "net.ipv6.conf.all.accept_redirects=0" >> /etc/sysctl.conf
 echo "net.ipv6.conf.default.accept_redirects=0" >> /etc/sysctl.conf
 echo "" >> /etc/sysctl.conf
+
+/sbin/sysctl -w net.ipv4.tcp_timestamps=0
+/sbin/sysctl -w net.ipv6.conf.all.accept_redirects=0
+/sbin/sysctl -w net.ipv6.conf.default.accept_redirects=0
+
 echo "##############################################"
 echo "###         Disable IPv6                   ###"
 echo "##############################################"
@@ -614,7 +619,7 @@ echo "#Disable SSH Root Login"
 sleep 2
 grep "^PermitRootLogin yes" /etc/ssh/sshd_config > /dev/null
 parametro=`echo $?`
-	if test $parametro = 0
+	if test $parametro = 1
 		then
 			echo "Parametro correto"
 		else
