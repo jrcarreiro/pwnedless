@@ -534,7 +534,7 @@ echo "" >> /etc/sysctl.conf
 
 echo "Disable Source Routed Packet Acceptance"
 sleep 2
-echo "#Disable Source Routed Packet Acceptance" >> /etc/syscchotl.conf
+echo "#Disable Source Routed Packet Acceptance" >> /etc/sysctl.conf
 echo "net.ipv4.conf.all.accept_source_route=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.default.accept_source_route=0" >> /etc/sysctl.conf
 echo "" >> /etc/sysctl.conf
