@@ -174,7 +174,7 @@ yum info rsyslog | grep installed > /dev/null
             if test $install = 1
                 then
                     yum install rsyslog -y > /dev/null
-                        echo "O rsyslog foi instalado"
+                        echo "The rsyslog was installed"
                 else
                     echo "The rsyslog is installed"
             fi
