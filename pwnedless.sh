@@ -817,6 +817,7 @@ echo ""
 
 echo "#Set Permissions on /etc/ssh/sshd_config"
 sleep 2
+stat -L -c "%a %u %g" /etc/ssh/sshd_config | egrep ".00 0 0"  > /dev/null
 permission=`echo $?`
 	if test $permission = 0
 		then
