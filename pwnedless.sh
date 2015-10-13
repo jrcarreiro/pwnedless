@@ -747,13 +747,11 @@ echo "##############################################"
 echo "###            Configure SSH               ###"
 echo "##############################################"
 echo "Creating security copies of sshd_config"
-ls -l /etc/ssh/sshd_config.original > /dev/null 2> /dev/null
-existe=`echo $?`
-	if test $existe = 0
+if [ -f $file_sshd.original ]
 		then
 			echo "The file already exists"
 		else
-			cp /etc/ssh/sshd_config{,.original}
+			cp $file_sshd{,.original}
 			echo "Created file"
 	fi
 sleep 2
@@ -763,86 +761,92 @@ echo "##############################################" >> /etc/ssh/sshd_config
 echo ""
 echo "#Set LogLevel to INFO"
 sleep 2
-grep "^LogLevel" /etc/ssh/sshd_config > /dev/null
+grep "^LogLevel" $file_sshd > /dev/null
 parameter=`echo $?`
 	if test $parameter = 0
 		then
 			echo "The parameter correct"
 		else
-			echo "#Set LogLevel to INFO" >> /etc/ssh/sshd_config
-			echo "LogLevel INFO" >> /etc/ssh/sshd_config
+			echo "#Set LogLevel to INFO" >> $file_sshd
+			echo "LogLevel INFO" >> $file_sshd
 			echo "The parameter fixed"
 	fi
 
 echo ""
 echo "#Disable SSH X11 Forwarding"
 sleep 2
-grep "^X11Forwarding yes" /etc/ssh/sshd_config > /dev/null
+grep "^X11Forwarding yes" $file_sshd > /dev/null
 parameter=`echo $?`
 	if test $parameter = 1
 		then
 			echo "The parameter correct"
 		else
-			sed -i 's/X11Forwarding yes/X11Forwarding no/g' /etc/ssh/sshd_config
+			sed -i 's/X11Forwarding yes/#X11Forwarding yes/g' $file_sshd
+			echo "#Disable SSH X11 Forwarding" >> $file_sshd
+			echo "X11Forwarding no" >> $file_sshd
 			echo "The parameter fixed"
 	fi
 
 echo ""
 #echo "#Disable SSH Password authentication"
 #sleep 2
-#grep "^PasswordAuthentication yes" /etc/ssh/sshd_config > /dev/null
+#grep "^PasswordAuthentication yes" $file_sshd > /dev/null
 #parameter=`echo $?`
-#	if test $parameter = 0
+#	if test $parameter = 1
 #		then
 #			echo "The parameter correct"
 #		else
-#			sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#			sed -i 's/PasswordAuthentication yes/#PasswordAuthentication yes/g' $file_sshd
+#			echo "#Disable SSH Password authentication" >> $file_sshd
+#			echo "PasswordAuthentication no" >> $file_sshd
 #			echo "The parameter fixed"
 #	fi
 
 echo ""
 echo "#Disable SSH Root Login"
 sleep 2
-grep "^PermitRootLogin yes" /etc/ssh/sshd_config > /dev/null
+grep "^PermitRootLogin yes" $file_sshd > /dev/null
 parameter=`echo $?`
 	if test $parameter = 1
 		then
 			echo "The parameter correct"
 		else
-			sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+			sed -i 's/PermitRootLogin yes/#PermitRootLogin yes/g' $file_sshd
+			echo "#Disable SSH Root Login" >> $file_sshd 
+			echo "PermitRootLogin no" >> $file_sshd
 			echo "The parameter fixed"
-	fi
-
-echo ""
-
-echo "#Set Permissions on /etc/ssh/sshd_config"
-sleep 2
-stat -L -c "%a %u %g" /etc/ssh/sshd_config | egrep ".00 0 0"  > /dev/null
-permission=`echo $?`
-	if test $permission = 0
-		then
-			echo "Permissions OK"
-		else
-			chown root:root /etc/ssh/sshd_config
-			chmod 600 /etc/ssh/sshd_config
-			echo "Permissions wrong, but it was corrected"
 	fi
 
 echo ""
 
 echo "Set SSH MaxAuthTries to 4 or Less"
 sleep 2
-grep "^MaxAuthTries 4" /etc/ssh/sshd_config > /dev/null
+grep "^MaxAuthTries 4" $file_sshd > /dev/null
 
 parameter=`echo $?`
 	if test $parameter = 0
 		then
 			echo "The parameter correct"
 		else
-			echo "#Set SSH MaxAuthTries to 4 or Less" >> /etc/ssh/sshd_config
-			echo "MaxAuthTries 4" >> /etc/ssh/sshd_config
+			echo "#Set SSH MaxAuthTries to 4 or Less" >> $file_sshd
+			echo "MaxAuthTries 4" >> $file_sshd
 			echo "The parameter fixed"
 	fi
+echo ""
+echo "#Set Permissions on '$file_sshd'"
+sleep 2
+stat -L -c "%a %u %g" $file_sshd | egrep ".00 0 0"  > /dev/null
+permission=`echo $?`
+	if test $permission = 0
+		then
+			echo "Permissions OK"
+		else
+			chown root:root $file_sshd
+			chmod 600 $file_sshd
+			echo "Permissions wrong, but it was corrected"
+	fi
+
+echo ""
 
 echo "Reload service SSH"
 /etc/init.d/sshd reload
