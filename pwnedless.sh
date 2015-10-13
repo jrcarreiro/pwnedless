@@ -779,7 +779,7 @@ echo "#Disable SSH X11 Forwarding"
 sleep 2
 grep "^X11Forwarding yes" /etc/ssh/sshd_config > /dev/null
 parameter=`echo $?`
-	if test $parameter = 0
+	if test $parameter = 1
 		then
 			echo "The parameter correct"
 		else
@@ -788,17 +788,17 @@ parameter=`echo $?`
 	fi
 
 echo ""
-echo "#Disable SSH Password authentication"
-sleep 2
-grep "^PasswordAuthentication yes" /etc/ssh/sshd_config > /dev/null
-parameter=`echo $?`
-	if test $parameter = 0
-		then
-			echo "The parameter correct"
-		else
-			sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-			echo "The parameter fixed"
-	fi
+#echo "#Disable SSH Password authentication"
+#sleep 2
+#grep "^PasswordAuthentication yes" /etc/ssh/sshd_config > /dev/null
+#parameter=`echo $?`
+#	if test $parameter = 0
+#		then
+#			echo "The parameter correct"
+#		else
+#			sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#			echo "The parameter fixed"
+#	fi
 
 echo ""
 echo "#Disable SSH Root Login"
