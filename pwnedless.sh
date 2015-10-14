@@ -746,6 +746,7 @@ echo ""
 echo "##############################################"
 echo "###            Configure SSH               ###"
 echo "##############################################"
+file_sshd="/etc/ssh/sshd_config"
 echo "Creating security copies of sshd_config"
 if [ -f $file_sshd.original ]
 		then
@@ -755,9 +756,9 @@ if [ -f $file_sshd.original ]
 			echo "Created file"
 	fi
 sleep 2
-echo "##############################################" >> /etc/ssh/sshd_config
-echo "###       Security Changes                 ###" >> /etc/ssh/sshd_config
-echo "##############################################" >> /etc/ssh/sshd_config
+echo "##############################################" >> $file_sshd
+echo "###       Security Changes                 ###" >> $file_sshd
+echo "##############################################" >> $file_sshd
 echo ""
 echo "#Set LogLevel to INFO"
 sleep 2
@@ -818,11 +819,84 @@ parameter=`echo $?`
 	fi
 
 echo ""
+echo "#Disable rhosts"
+sleep 2
+grep "^IgnoreRhosts yes" $file_sshd > /dev/null
+parameter=`echo $?`
+	if test $parameter = 0
+		then
+			echo "The parameter correct"
+		else
+			sed -i 's/IgnoreRhosts no/#PermitRootLogin no/g' $file_sshd
+			echo "#Disable rhosts" >> $file_sshd 
+			echo "IgnoreRhosts yes" >> $file_sshd
+			echo "The parameter fixed"
+fi
 
+echo ""
+echo "#Prevent the use of insecure home directory and key file permissions"
+sleep 2
+grep "^StrictModes yes" $file_sshd > /dev/null
+parameter=`echo $?`
+	if test $parameter = 0
+		then
+			echo "The parameter correct"
+		else
+			sed -i 's/StrictModes no/#StrictModes no/g' $file_sshd
+			echo "#Prevent the use of insecure home directory and key file permissions" >> $file_sshd 
+			echo "StrictModes yes" >> $file_sshd
+			echo "The parameter fixed"
+	fi
+
+echo ""
+echo "#Turn on privilege separation"
+sleep 2
+grep "^UsePrivilegeSeparation yes" $file_sshd > /dev/null
+parameter=`echo $?`
+	if test $parameter = 0
+		then
+			echo "The parameter correct"
+		else
+			sed -i 's/UsePrivilegeSeparation no/#UsePrivilegeSeparation no/g' $file_sshd
+			echo "#Turn on privilege separation" >> $file_sshd 
+			echo "UsePrivilegeSeparation yes" >> $file_sshd
+			echo "The parameter fixed"
+	fi
+				
+echo ""
+echo "#Disable Empty Passwords"
+sleep 2
+grep "^PermitEmptyPasswords no" $file_sshd > /dev/null
+parameter=`echo $?`
+if test $parameter = 0
+	then
+		echo "The parameter correct"
+	else
+		sed -i 's/PermitEmptyPasswords yes/#PermitEmptyPasswords yes/g' $file_sshd
+		echo "#Disable Empty Passwords" >> $file_sshd 
+		echo "PermitEmptyPasswords no" >> $file_sshd
+		echo "The parameter fixed"
+	fi
+			
+echo ""
+echo "#Configure Idle Log Out Timeout Interval"
+sleep 2
+grep "^ClientAliveInterval" $file_sshd > /dev/null
+parameter=`echo $?`
+if test $parameter = 1
+	then
+		echo "The parameter correct"
+	else
+		echo "#Configure Idle Log Out Timeout Interval" >> $file_sshd 
+		echo "ClientAliveInterval 300" >> $file_sshd
+		echo "ClientAliveCountMax 0" >> $file_sshd
+		echo "The parameter fixed"
+fi
+					
+echo ""
 echo "Set SSH MaxAuthTries to 4 or Less"
 sleep 2
 grep "^MaxAuthTries 4" $file_sshd > /dev/null
-
 parameter=`echo $?`
 	if test $parameter = 0
 		then
@@ -832,6 +906,7 @@ parameter=`echo $?`
 			echo "MaxAuthTries 4" >> $file_sshd
 			echo "The parameter fixed"
 	fi
+	
 echo ""
 echo "#Set Permissions on '$file_sshd'"
 sleep 2
@@ -847,7 +922,6 @@ permission=`echo $?`
 	fi
 
 echo ""
-
 echo "Reload service SSH"
 /etc/init.d/sshd reload
 
