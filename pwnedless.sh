@@ -10,7 +10,6 @@ echo "###	installing pre requirements	 ###"
 echo "##############################################"
 yum install yum-plugin-security yum-utils ed sysstat -y
 
-
 echo "##############################################"
 echo "###         Secure Boot Settings           ###"
 echo "##############################################"
@@ -44,9 +43,7 @@ echo "###     Additional Process Hardening       ###"
 echo "##############################################"
 
 echo "Create a copy of file"
-ls -l /etc/security/limits.conf.original > /dev/null 2> /dev/null
-existe=`echo $?`
-	if test $existe = 0
+	if [ -f /etc/security/limits.conf.original ]
 		then
 			echo "The file already exists"
 		else
@@ -54,9 +51,7 @@ existe=`echo $?`
 			echo "Created file"
 	fi
 
-ls -l /etc/sysctl.conf.original > /dev/null 2> /dev/null
-existe=`echo $?`
-	if test $existe = 0
+	if [ -f /etc/sysctl.conf.original ]
 		then
 			echo "The file already exists"
 		else
