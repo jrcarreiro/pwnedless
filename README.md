@@ -1,14 +1,11 @@
-# Pwnedless (BETA)
-
+# Pwnedless 0.2 (BETA)
 This is a hardening script for use on systems based on RedHat 6
-
-#Donate
-
-If this script is useful to you and if you want to contribute $ 1.00 or $ 5.00, send me an email with the subject "Donation": thedestiny.labs@gmail.com
-
 #CAUTION
 Does not run in a production environment without reading the code.
 There are settings that can affect directly your environment.
+#Donate
+If this script is useful to you and if you want to contribute send me an email with the subject "Donate": thedestiny.labs@gmail.com
+
 # To Do
 - Create a menu
 - Adapter for RedHat 7
