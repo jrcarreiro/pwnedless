@@ -4,7 +4,7 @@ This is a hardening script for use on systems based on RedHat 6
 Does not run in a production environment without reading the code.
 There are settings that can affect directly your environment.
 #Donate
-If this script is useful to you and if you want to contribute send me an email with the subject "Donate": thedestiny.labs@gmail.com
+If this script is useful to you and if you want to contribute send me an email with the subject "Donate": w.carreirojunior@gmail.com
 
 # To Do
 - Create a menu
