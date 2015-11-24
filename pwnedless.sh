@@ -1290,15 +1290,17 @@ echo "" >> $file_audit
 
 pkill -HUP -P 1 auditd
 
+echo "##############################################"
+echo "###     Additional Process Hardening       ###"
+echo "##############################################"
+
 ########################################
 ###             Variables            ###
 ########################################
 
 file_limits="/etc/security/limits.conf"
+file_init_reboot="/etc/init/control-alt-delete.conf"
 
-echo "##############################################"
-echo "###     Additional Process Hardening       ###"
-echo "##############################################"
 
 echo "Create a copy of file"
 
@@ -1310,6 +1312,13 @@ echo "Create a copy of file"
             echo "Created file"
     fi
 
+    if [ -f $file_init_reboot.original ]
+		then
+			echo "The file already exists"
+		else
+			cp $file_init_reboot{,.original}
+			echo "Created file"
+    fi
 
 echo "##############################################" >> $file_limits
 echo "###      Security Changes           ###" >> $file_limits
@@ -1331,7 +1340,11 @@ par_limits="hard core 0"
             echo $par_limits >> $file_limits
     fi
 
-########################################
+echo "Disable Reboot Using ctrl-alt-del-keys"
+
+sed -i 's#/sbin/shutdown -r now#/usr/bin/logger -p authpriv.notice -t init#g' $file_init_reboot
+
+ ########################################
 ###             Variables            ###
 ########################################
 
