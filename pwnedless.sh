@@ -911,7 +911,7 @@ echo "Set Default umask for Users"
 sleep 2
 grep "^umask 077" /etc/bashrc > /dev/null
 parameter=`echo $?`
-    if test $parameter = 1
+    if test $parameter = 0
         then
             echo "The parameter correct"
         else
@@ -922,7 +922,7 @@ parameter=`echo $?`
 
 grep "^umask 077" /etc/profile > /dev/null
 parameter=`echo $?`
-    if test $parameter = 1
+    if test $parameter = 0
         then
             echo "The parameter correct"
         else
