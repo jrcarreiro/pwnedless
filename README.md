@@ -1,4 +1,4 @@
-# Pwnedless 0.2 (BETA)
+# Pwnedless 0.3 (BETA)
 This is a hardening script for use on systems based on RedHat 6
 #CAUTION
 Does not run in a production environment without reading the code.
