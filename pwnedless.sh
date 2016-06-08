@@ -699,11 +699,11 @@ echo "##############################################" >> $file_sysctl
 sleep 2
 echo ">> Disable IPv6 Router Advertisements"
 sleep 2
-valida_sysctl1=`$sysctl net.ipv6.conf.all.accept_ra | awk '{print $3}'`
-valida_sysctl2=`$sysctl net.ipv6.conf.default.accept_ra | awk '{print $3}'`
+check_sysctl1=`$sysctl net.ipv6.conf.all.accept_ra | awk '{print $3}'`
+check_sysctl2=`$sysctl net.ipv6.conf.default.accept_ra | awk '{print $3}'`
 par_sysctl1="net.ipv6.conf.all.accept_ra = 0"
 par_sysctl2="net.ipv6.conf.default.accept_ra = 0"
-    if test $valida_sysctl1 = 0
+    if test $check_sysctl1 = 0
         then
             echo "- The '$par_sysctl1' was enabled"
         else
@@ -712,7 +712,7 @@ par_sysctl2="net.ipv6.conf.default.accept_ra = 0"
             echo $par_sysctl1 >> $file_sysctl
     fi
 
-    if test $valida_sysctl2 = 0
+    if test $check_sysctl2 = 0
         then
             echo "- The '$par_sysctl2' was enabled"
         else
@@ -723,11 +723,11 @@ par_sysctl2="net.ipv6.conf.default.accept_ra = 0"
 
 echo ">> Disable IPv6 Redirect Acceptance"
 sleep 2
-valida_sysctl1=`$sysctl net.ipv6.conf.all.accept_redirects | awk '{print $3}'`
-valida_sysctl2=`$sysctl net.ipv6.conf.default.accept_redirects | awk '{print $3}'`
+check_sysctl1=`$sysctl net.ipv6.conf.all.accept_redirects | awk '{print $3}'`
+check_sysctl2=`$sysctl net.ipv6.conf.default.accept_redirects | awk '{print $3}'`
 par_sysctl1="net.ipv6.conf.all.accept_redirects = 0"
 par_sysctl2="net.ipv6.conf.default.accept_redirects = 0"
-    if test $valida_sysctl1 = 0
+    if test $check_sysctl1 = 0
         then
             echo "- The '$par_sysctl1' was enabled"
         else
@@ -736,7 +736,7 @@ par_sysctl2="net.ipv6.conf.default.accept_redirects = 0"
             echo $par_sysctl1 >> $file_sysctl
     fi
 
-    if test $valida_sysctl2 = 0
+    if test $check_sysctl2 = 0
         then
             echo "- The '$par_sysctl2' was enabled"
         else
@@ -1344,10 +1344,10 @@ echo ""
 echo "Restrict Core Dumps"
 sleep 2
 grep "hard core" $file_limits > /dev/null
-valida_limits=`echo $?`
+check_limits=`echo $?`
 par_limits="hard core 0"
 
-    if test $valida_limits = 0
+    if test $check_limits = 0
         then
             echo "The parameter is already set"
         else
@@ -1386,10 +1386,10 @@ echo ""
 
 echo ">> Configuring suid_dumpable"
 sleep 2
-valida_sysctl=`$sysctl fs.suid_dumpable | awk '{print $3}'`
+check_sysctl=`$sysctl fs.suid_dumpable | awk '{print $3}'`
 par_sysctl="fs.suid_dumpable = 0"
 
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- The parameter is already set"
         else
@@ -1401,10 +1401,10 @@ par_sysctl="fs.suid_dumpable = 0"
 
 echo ">> Configure ExecShield"
 sleep 2
-valida_sysctl=`$sysctl kernel.exec-shield | awk '{print $3}'`
+check_sysctl=`$sysctl kernel.exec-shield | awk '{print $3}'`
 par_sysctl="kernel.exec-shield = 1"
 
-    if test $valida_sysctl = 1
+    if test $check_sysctl = 1
         then
             echo "- The parameter is already set"
         else
@@ -1416,10 +1416,10 @@ par_sysctl="kernel.exec-shield = 1"
 
 echo ">> Enable Randomized Virtual Memory Region Placement"
 sleep 2
-valida_sysctl=`$sysctl kernel.randomize_va_space | awk '{print $3}'`
+check_sysctl=`$sysctl kernel.randomize_va_space | awk '{print $3}'`
 par_sysctl="kernel.randomize_va_space = 2"
 
-    if test $valida_sysctl = 2
+    if test $check_sysctl = 2
         then
             echo "- The parameter is already set"
         else
@@ -1432,9 +1432,9 @@ par_sysctl="kernel.randomize_va_space = 2"
 sleep 2
 echo ">> Disable IP Forwarding"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.ip_forward | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.ip_forward | awk '{print $3}'`
 par_sysctl="net.ipv4.ip_forward = 0"
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- IP Forwarding was Disabled"
         else
@@ -1447,9 +1447,9 @@ par_sysctl="net.ipv4.ip_forward = 0"
 sleep 2
 echo ">> Disable Send Packet Redirects"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.conf.all.send_redirects | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.conf.all.send_redirects | awk '{print $3}'`
 par_sysctl="net.ipv4.conf.all.send_redirects = 0"
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- Send Packet Redirects was Disabled"
         else
@@ -1461,11 +1461,11 @@ par_sysctl="net.ipv4.conf.all.send_redirects = 0"
 
 echo ">> Disable Source Routed Packet Acceptance"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.conf.all.accept_source_route | awk '{print $3}'`
-valida_sysctl1=`$sysctl net.ipv4.conf.default.accept_source_route | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.conf.all.accept_source_route | awk '{print $3}'`
+check_sysctl1=`$sysctl net.ipv4.conf.default.accept_source_route | awk '{print $3}'`
 par_sysctl="net.ipv4.conf.all.accept_source_route = 0"
 par_sysctl1="net.ipv4.conf.default.accept_source_route = 0"
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- The '$par_sysctl' was Disabled"
         else
@@ -1475,7 +1475,7 @@ par_sysctl1="net.ipv4.conf.default.accept_source_route = 0"
             echo "" >> $file_sysctl
     fi
 
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- The '$par_sysctl1' was Disabled"
         else
@@ -1487,11 +1487,11 @@ par_sysctl1="net.ipv4.conf.default.accept_source_route = 0"
 
 echo ">> Disable ICMP Redirect Acceptance"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.conf.all.accept_redirects | awk '{print $3}'`
-valida_sysctl1=`$sysctl net.ipv4.conf.default.accept_redirects | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.conf.all.accept_redirects | awk '{print $3}'`
+check_sysctl1=`$sysctl net.ipv4.conf.default.accept_redirects | awk '{print $3}'`
 par_sysctl="net.ipv4.conf.all.accept_redirects = 0"
 par_sysctl1="net.ipv4.conf.default.accept_redirects = 0"
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- The '$par_sysctl' was Disabled"
         else
@@ -1501,7 +1501,7 @@ par_sysctl1="net.ipv4.conf.default.accept_redirects = 0"
             echo "" >> $file_sysctl
     fi
 
-    if test $valida_sysctl1 = 0
+    if test $check_sysctl1 = 0
         then
             echo "- The '$par_sysctl1' was Disabled"
         else
@@ -1514,11 +1514,11 @@ par_sysctl1="net.ipv4.conf.default.accept_redirects = 0"
 
 echo ">> Disable Secure ICMP Redirect Acceptance"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.conf.all.secure_redirects | awk '{print $3}'`
-valida_sysctl1=`$sysctl net.ipv4.conf.all.secure_redirects | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.conf.all.secure_redirects | awk '{print $3}'`
+check_sysctl1=`$sysctl net.ipv4.conf.all.secure_redirects | awk '{print $3}'`
 par_sysctl="net.ipv4.conf.all.secure_redirects = 0"
 par_sysctl1="net.ipv4.conf.default.secure_redirects = 0"
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "- The '$par_sysctl' was Disabled"
         else
@@ -1528,7 +1528,7 @@ par_sysctl1="net.ipv4.conf.default.secure_redirects = 0"
             echo "" >> $file_sysctl
     fi
 
-    if test $valida_sysctl1 = 0
+    if test $check_sysctl1 = 0
         then
             echo "- The '$par_sysctl1' was Disabled"
         else
@@ -1540,11 +1540,11 @@ par_sysctl1="net.ipv4.conf.default.secure_redirects = 0"
 
 echo ">> Log Suspicious Packets"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.conf.all.log_martians | awk '{print $3}'`
-valida_sysctl1=`$sysctl net.ipv4.conf.all.log_martians | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.conf.all.log_martians | awk '{print $3}'`
+check_sysctl1=`$sysctl net.ipv4.conf.all.log_martians | awk '{print $3}'`
 par_sysctl="net.ipv4.conf.all.log_martians = 1"
 par_sysctl1="net.ipv4.conf.default.log_martians = 1"
-    if test $valida_sysctl = 1
+    if test $check_sysctl = 1
         then
             echo "- The '$par_sysctl' was Disabled"
         else
@@ -1554,7 +1554,7 @@ par_sysctl1="net.ipv4.conf.default.log_martians = 1"
             echo "" >> $file_sysctl
     fi
 
-    if test $valida_sysctl1 = 1
+    if test $check_sysctl1 = 1
         then
             echo "- The '$par_sysctl1' was Disabled"
         else
@@ -1566,9 +1566,9 @@ par_sysctl1="net.ipv4.conf.default.log_martians = 1"
 
 echo ">> Enable Ignore Broadcast Requests"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.icmp_echo_ignore_broadcasts | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.icmp_echo_ignore_broadcasts | awk '{print $3}'`
 par_sysctl="net.ipv4.icmp_echo_ignore_broadcasts = 1"
-    if test $valida_sysctl = 1
+    if test $check_sysctl = 1
         then
             echo "- Ignore Broadcast Requests was Enabled"
         else
@@ -1580,9 +1580,9 @@ par_sysctl="net.ipv4.icmp_echo_ignore_broadcasts = 1"
 
 echo ">> Enable Bad Error Message Protection"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.icmp_ignore_bogus_error_responses | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.icmp_ignore_bogus_error_responses | awk '{print $3}'`
 par_sysctl="net.ipv4.icmp_ignore_bogus_error_responses = 1"
-    if test $valida_sysctl = 1
+    if test $check_sysctl = 1
         then
             echo "- Bad Error Message Protection was Enabled"
         else
@@ -1594,10 +1594,10 @@ par_sysctl="net.ipv4.icmp_ignore_bogus_error_responses = 1"
 
 echo ">> Enable RFC-recommended Source Route Validation"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.conf.all.rp_filter | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.conf.all.rp_filter | awk '{print $3}'`
 par_sysctl="net.ipv4.conf.all.rp_filter = 1"
 par_sysctl1="net.ipv4.conf.default.rp_filter = 1"
-    if test $valida_sysctl = 1
+    if test $check_sysctl = 1
         then
             echo "- RFC-recommended Source Route Validation was Enabled"
         else
@@ -1611,9 +1611,9 @@ par_sysctl1="net.ipv4.conf.default.rp_filter = 1"
 
 echo ">> Enable TCP SYN Cookies"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.tcp_syncookies | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.tcp_syncookies | awk '{print $3}'`
 par_sysctl="net.ipv4.tcp_syncookies = 1"
-    if test $valida_sysctl = 1
+    if test $check_sysctl = 1
         then
             echo "- Enable TCP SYN Cookies was Enabled"
         else
@@ -1625,9 +1625,9 @@ par_sysctl="net.ipv4.tcp_syncookies = 1"
 
 echo "- Others"
 sleep 2
-valida_sysctl=`$sysctl net.ipv4.tcp_timestamps | awk '{print $3}'`
+check_sysctl=`$sysctl net.ipv4.tcp_timestamps | awk '{print $3}'`
 par_sysctl="net.ipv4.tcp_timestamps = 0"
-    if test $valida_sysctl = 0
+    if test $check_sysctl = 0
         then
             echo "The '$par_sysctl' was enabled"
         else
