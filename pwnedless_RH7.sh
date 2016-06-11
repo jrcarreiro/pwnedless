@@ -83,8 +83,6 @@ remediation=$(systemctl disable autofs)
   fi
 
 
-
-
 echo "##############################################"
 echo "###	installing pre requirements	 ###"
 echo "##############################################"
