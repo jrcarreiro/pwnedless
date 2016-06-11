@@ -40,6 +40,7 @@ echo ""
 echo "#Ensure mounting of FAT filesystems is disabled" > $file_pwnedless
 echo "install vfat /bin/true" > $file_pwnedless
 
+<<<<<<< Updated upstream
 sleep 2
 
 echo ">>>>Ensure separate partition exists for /tmp"
@@ -55,6 +56,8 @@ audit=`echo $?`
 
 sed 's/Options/#&/' /etc/systemd/system/local-fs.target.wants/tmp.mount
 sed '/Options/ a Options=mode=1777,strictatime,noexec,nodev,nosuid' /etc/systemd/system/local-fs.target.wants/tmp.mount
+=======
+>>>>>>> Stashed changes
 
 echo "##############################################"
 echo "###	installing pre requirements	 ###"
