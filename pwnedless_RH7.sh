@@ -4,7 +4,7 @@
 #    	Script for  hardening		         #
 #    	S.O (RedHat/CentOS		             #
 #  created by: Junior Carreiro aka 0x4a0x72  #
-#  
+#
 ##############################################
 ##############################################
 ##          Variables                       ##
@@ -54,8 +54,10 @@ audit=`echo $?`
             echo "The /tmp is partitioned"
     fi
 
-sed 's/Options/#&/' /etc/systemd/system/local-fs.target.wants/tmp.mount
-sed '/Options/ a Options=mode=1777,strictatime,noexec,nodev,nosuid' /etc/systemd/system/local-fs.target.wants/tmp.mount
+echo ">>>>Apply nosuid, noexec and nodev on /tmp "
+file="/etc/systemd/system/local-fs.target.wants/tmp.mount"
+sed 's/Options/#&/' $file
+sed '/Options/ a Options=mode=1777,strictatime,noexec,nodev,nosuid' $file
 =======
 >>>>>>> Stashed changes
 
