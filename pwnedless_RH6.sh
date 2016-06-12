@@ -225,7 +225,7 @@ parameter=`echo $?`
             echo "- The parameter correct"
         else
             sed -i 's\SINGLE=/sbin/sushell\#SINGLE=/sbin/sushell\g' $file_init
-            echo "#Require Authentication for Single-User Mode" >> $file_init 
+            echo "#Require Authentication for Single-User Mode" >> $file_init
             echo "SINGLE=/sbin/sulogin" >> $file_init
             echo "- The parameter fixed"
     fi
@@ -239,7 +239,7 @@ parameter=`echo $?`
             echo "- The parameter correct"
         else
             sed -i 's/PROMPT=yes/#PROMPT=yes/g' $file_init
-            echo "#Disable Interactive Boot" >> $file_init 
+            echo "#Disable Interactive Boot" >> $file_init
             echo "PROMPT=no" >> $file_init
             echo "- The parameter fixed"
     fi
@@ -252,7 +252,7 @@ parameter=`echo $?`
         then
             echo "- The parameter correct"
         else
-            echo "#Set Daemon umask" >> $file_init 
+            echo "#Set Daemon umask" >> $file_init
             echo "umask 027" >> $file_init
             echo "- The parameter fixed"
     fi
@@ -334,7 +334,7 @@ parameter=`echo $?`
             echo "- The parameter correct"
         else
             sed -i 's/PermitRootLogin yes/#PermitRootLogin yes/g' $file_sshd
-            echo "#Disable SSH Root Login" >> $file_sshd 
+            echo "#Disable SSH Root Login" >> $file_sshd
             echo "PermitRootLogin no" >> $file_sshd
             echo "- The parameter fixed"
     fi
@@ -348,7 +348,7 @@ parameter=`echo $?`
             echo "- The parameter correct"
         else
             sed -i 's/IgnoreRhosts no/#PermitRootLogin no/g' $file_sshd
-            echo "#Disable rhosts" >> $file_sshd 
+            echo "#Disable rhosts" >> $file_sshd
             echo "IgnoreRhosts yes" >> $file_sshd
             echo "- The parameter fixed"
 fi
@@ -363,7 +363,7 @@ parameter=`echo $?`
             echo "- The parameter correct"
         else
             sed -i 's/StrictModes no/#StrictModes no/g' $file_sshd
-            echo "#Prevent the use of insecure home directory and key file permissions" >> $file_sshd 
+            echo "#Prevent the use of insecure home directory and key file permissions" >> $file_sshd
             echo "StrictModes yes" >> $file_sshd
             echo "- The parameter fixed"
     fi
@@ -378,11 +378,11 @@ parameter=`echo $?`
             echo "- The parameter correct"
         else
             sed -i 's/UsePrivilegeSeparation no/#UsePrivilegeSeparation no/g' $file_sshd
-            echo "#Turn on privilege separation" >> $file_sshd 
+            echo "#Turn on privilege separation" >> $file_sshd
             echo "UsePrivilegeSeparation yes" >> $file_sshd
             echo "- The parameter fixed"
     fi
-                
+
 echo ""
 echo ">> Disable Empty Passwords"
 sleep 2
@@ -393,11 +393,11 @@ if test $parameter = 0
         echo "- The parameter correct"
     else
         sed -i 's/PermitEmptyPasswords yes/#PermitEmptyPasswords yes/g' $file_sshd
-        echo "#Disable Empty Passwords" >> $file_sshd 
+        echo "#Disable Empty Passwords" >> $file_sshd
         echo "PermitEmptyPasswords no" >> $file_sshd
         echo "- The parameter fixed"
     fi
-            
+
 echo ""
 echo "#Configure Idle Log Out Timeout Interval"
 sleep 2
@@ -407,7 +407,7 @@ if test $parameter = 1
     then
         echo "- The parameter correct"
     else
-        echo "#Configure Idle Log Out Timeout Interval" >> $file_sshd 
+        echo "#Configure Idle Log Out Timeout Interval" >> $file_sshd
         echo "ClientAliveInterval 300" >> $file_sshd
         echo "ClientAliveCountMax 0" >> $file_sshd
         echo "- The parameter fixed"
@@ -932,7 +932,7 @@ parameter=`echo $?`
 			sed -i "/${verify_auth1}/a auth            required        pam_wheel.so use_uid" $file_pam_su
 			echo "- The parameter fixed"
 	fi
-	
+
 echo "##############################################"
 echo "###     User Accounts and Environment      ###"
 echo "##############################################"
@@ -952,7 +952,7 @@ echo "Ensure Password Fields are Not Empty"
 for user in `/bin/cat /etc/shadow | /bin/awk -F: '($2 == "" ) { print $1 " does not have a password "}'`; do
     /usr/bin/passwd -l $user 2> /dev/null
 done
-    
+
 echo "Set Default umask for Users"
 sleep 2
 grep "^umask 077" /etc/bashrc > /dev/null
@@ -1694,6 +1694,10 @@ sleep 2
 
 echo "Disabling CUPS"
 chkconfig cups off 2> /dev/null
+sleep 2
+
+echo "Disable Automounting"
+chkconfig autofs off 2> /dev/null
 sleep 2
 
 echo "##############################################"
