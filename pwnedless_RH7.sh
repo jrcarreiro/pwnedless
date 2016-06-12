@@ -140,7 +140,8 @@ audit2=$(echo $?)
       echo "Filesystem configured for regularly check on cron files"
     else
       echo "Configure filesystem integrity for regularly check"
-      echo "0 5 * * * /usr/sbin/aide --check" >> aide_cron ; crontab aide_cron ; rm -y aide_cron
+      echo "0 5 * * * /usr/sbin/aide --check"
+      >> aide_cron ; crontab aide_cron ; rm -y aide_cron
     fi
   fi
 
@@ -164,14 +165,69 @@ permission=`echo $?`
           chmod og-rwx /boot/grub2/grub.cfg
     fi
 echo ""
-########################################
-###             Variables            ###
-########################################
+sleep 2
+echo ""
+echo ">>>> Ensure authentication required for single user mode"
+file="/usr/lib/systemd/system/rescue.service"
+grep /sbin/sulogin /usr/lib/systemd/system/rescue.service &>/dev/null
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    cp $file{,.pwnedless}
+    echo "Configuring authentication for single user mode"
+    echo "" >> $file
+    echo "#----> Security Changes <----#" >> $file
+    echo "ExecStart=-/bin/sh -c "/sbin/sulogin; /usr/bin/systemctl --fail --no-block default"" >> $file
+  fi
+file="/usr/lib/systemd/system/emergency.service"
+grep /sbin/sulogin /usr/lib/systemd/system/emergency.service
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    cp $file{,.pwnedless}
+    echo "Configuring authentication for single user mode"
+    echo "" >> $file
+    echo "#----> Security Changes <----#" >> $file
+    echo "ExecStart=-/bin/sh -c "/sbin/sulogin; /usr/bin/systemctl --fail --no-block default"" >> $file
 
-file_grub="/etc/grub.conf"
-file_init="/etc/sysconfig/init"
+sleep 2
+echo ""
+echo "Additional Process Hardening"
+echo ">>>> Ensure core dumps are restricted"
+file="/etc/security/limits.conf"
+grep "hard core" /etc/security/limits.conf /etc/security/limits.d/*
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    cp $file{,.pwnedless}
+    echo "Configuring core dumps restrict on limits.conf"
+    echo "" >> $file
+    echo "#----> Security Changes <----#" >> $file
+    echo "hard core 0" >> $file
+  fi
 
-echo "Creating security copies of $file_init"
+file="/etc/sysctl.d/72-coredump-pwnedless.conf"
+audit=$(sysctl fs.suid_dumpable | awk '{print $3}')
+  if [ $audit != 0 ]; then
+    echo "Configuring core dumps restrict on sysctl.d"
+    echo "" >> $file
+    echo "#----> Security Changes <----#" >> $file
+    echo "fs.suid_dumpable = 0" >> $file
+    sysctl -w fs.suid_dumpable=0 &>/dev/null
+  fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if [ -f $file_init.original ]
         then
@@ -180,13 +236,8 @@ if [ -f $file_init.original ]
             cp $file_init{,.original}
             echo "Created file"
     fi
-sleep 2
-echo ""
-echo "" >> $file_init
-echo "##############################################" >> $file_init
 echo "###       Security Changes                 ###" >> $file_init
-echo "##############################################" >> $file_init
-echo ""
+echo "" >> $file_init
 echo ">> Require Authentication for Single-User Mode"
 sleep 2
 grep "SINGLE=/sbin/sulogin" $file_init > /dev/null
