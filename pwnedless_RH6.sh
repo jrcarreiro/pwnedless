@@ -108,7 +108,7 @@ yum install -y ${Soft[*]}
 
 
 echo "##############################################"
-echo "###	        Initial Setup      	        ###"
+echo "###	        Initial Setup Filesystem       ###"
 echo "##############################################"
 file_pwnedless="/etc/modprobe.d/pwnedless.conf"
 echo ""
@@ -173,8 +173,30 @@ audit=$(echo $?)
     echo "AIDE database is initializing, this may take a few minutes...be patient"
     aide --init
     mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+    echo "Configure filesystem integrity for regularly check"
+    echo "0 5 * * * /usr/sbin/aide --check" >> aide_cron ; crontab aide_cron ; rm -y aide_cron
     echo "AIDE was installed successfully"
   fi
+
+sleep 2
+echo ""
+echo ">>>> Ensure filesystem integrity is regularly checked"
+crontab -u root -l | grep aide &>/dev/null
+audit1=$(echo $?)
+grep -r aide /etc/cron.* /etc/crontab &>/dev/null
+audit2=$(echo $?)
+
+  if [ $audit1 = 0 ]; then
+    echo "Filesystem configured for regularly check on crontab"
+  else
+    if [ $audit2 = 0 ]; then
+      echo "Filesystem configured for regularly check on cron files"
+    else
+      echo "Configure filesystem integrity for regularly check"
+      echo "0 5 * * * /usr/sbin/aide --check" >> aide_cron ; crontab aide_cron ; rm -y aide_cron
+    fi
+  fi
+
 echo "##############################################"
 echo "###         Secure Boot Settings           ###"
 echo "##############################################"
