@@ -108,7 +108,7 @@ remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.repos.d/*"
 sleep 2
 echo ""
 echo ">>>> Ensure AIDE is installed"
-rpm -q aide
+rpm -q aide &>/dev/null
 audit=$(echo $?)
 
   if [ $audit = 0 ]; then
