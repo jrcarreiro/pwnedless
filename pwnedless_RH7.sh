@@ -82,6 +82,30 @@ remediation=$(systemctl disable autofs)
     echo "Automounting is disabled"
   fi
 
+sleep 2
+echo ""
+echo ">>>> Ensure gpgcheck is globally activated"
+audit=$(grep gpgcheck=0 /etc/yum.conf)
+remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.conf"
+
+  if [ -z "$audit" ]; then
+    echo "gpgcheck was globally activated on yum.conf file"
+    $remediation
+  else
+    echo "gpgcheck is globally activated on yum.conf file"
+  fi
+
+audit=$(grep gpgcheck=0 /etc/yum.repos.d/*)
+remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.repos.d/*"
+
+  if [ -z "$audit" ]; then
+    echo "gpgcheck was globally activated on files inside yum.repos.d directory"
+    $remediation
+  else
+    echo "gpgcheck is globally activated on files inside yum.repos.d directory"
+  fi
+
+
 
 echo "##############################################"
 echo "###	installing pre requirements	 ###"
