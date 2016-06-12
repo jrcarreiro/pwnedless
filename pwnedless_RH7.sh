@@ -84,6 +84,7 @@ remediation=$(systemctl disable autofs)
 
 sleep 2
 echo ""
+echo "Configure Software Updates"
 echo ">>>> Ensure gpgcheck is globally activated"
 audit=$(grep gpgcheck=0 /etc/yum.conf)
 remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.conf"
@@ -107,6 +108,7 @@ remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.repos.d/*"
 
 sleep 2
 echo ""
+echo "Filesystem Integrity Checking"
 echo ">>>> Ensure AIDE is installed"
 rpm -q aide &>/dev/null
 audit=$(echo $?)
@@ -141,6 +143,90 @@ audit2=$(echo $?)
       echo "0 5 * * * /usr/sbin/aide --check" >> aide_cron ; crontab aide_cron ; rm -y aide_cron
     fi
   fi
+
+sleep 2
+echo ""
+echo "Secure Boot Settings"
+echo ">>>> Ensure permissions on bootloader config are configured"
+stat -L -c "%u %g" /boot/grub2/grub.cfg | egrep "0 0" > /dev/null
+permission=`echo $?`
+    if test $permission = 0
+        then
+            echo "Permission OK"
+        else
+            chown root:root /boot/grub2/grub.cfg
+            echo "Permissions wrong, but it was corrected"
+    fi
+stat -L -c "%a" /boot/grub2/grub.cfg | egrep ".00" > /dev/null
+permission=`echo $?`
+    if test $permission = 1
+        then
+          chmod og-rwx /boot/grub2/grub.cfg
+    fi
+echo ""
+########################################
+###             Variables            ###
+########################################
+
+file_grub="/etc/grub.conf"
+file_init="/etc/sysconfig/init"
+
+echo "Creating security copies of $file_init"
+
+if [ -f $file_init.original ]
+        then
+            echo "The file already exists"
+        else
+            cp $file_init{,.original}
+            echo "Created file"
+    fi
+sleep 2
+echo ""
+echo "" >> $file_init
+echo "##############################################" >> $file_init
+echo "###       Security Changes                 ###" >> $file_init
+echo "##############################################" >> $file_init
+echo ""
+echo ">> Require Authentication for Single-User Mode"
+sleep 2
+grep "SINGLE=/sbin/sulogin" $file_init > /dev/null
+parameter=`echo $?`
+    if test $parameter = 0
+        then
+            echo "- The parameter correct"
+        else
+            sed -i 's\SINGLE=/sbin/sushell\#SINGLE=/sbin/sushell\g' $file_init
+            echo "#Require Authentication for Single-User Mode" >> $file_init
+            echo "SINGLE=/sbin/sulogin" >> $file_init
+            echo "- The parameter fixed"
+    fi
+
+echo ">> Disable Interactive Boot"
+sleep 2
+grep "PROMPT=no" $file_init > /dev/null
+parameter=`echo $?`
+    if test $parameter = 0
+        then
+            echo "- The parameter correct"
+        else
+            sed -i 's/PROMPT=yes/#PROMPT=yes/g' $file_init
+            echo "#Disable Interactive Boot" >> $file_init
+            echo "PROMPT=no" >> $file_init
+            echo "- The parameter fixed"
+    fi
+
+echo ">> Set Daemon umask"
+sleep 2
+grep "umask 027" $file_init > /dev/null
+parameter=`echo $?`
+    if test $parameter = 0
+        then
+            echo "- The parameter correct"
+        else
+            echo "#Set Daemon umask" >> $file_init
+            echo "umask 027" >> $file_init
+            echo "- The parameter fixed"
+    fi
 
 
 

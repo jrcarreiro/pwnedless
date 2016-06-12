@@ -31,7 +31,7 @@ Soft=();
 
 echo "Verify the ${rsyslog} package"
 
-yum info ${rsyslog} | grep installed > /dev/null
+yum info ${rsyslog} | grep installed &> /dev/null
         install=`echo $?`
             if test $install = 1
                 then
@@ -43,7 +43,7 @@ yum info ${rsyslog} | grep installed > /dev/null
 echo ""
 echo "Verify the ${yumpluginsecurity}"
 
-yum info ${yumpluginsecurity} | grep installed > /dev/null
+yum info ${yumpluginsecurity} | grep installed &> /dev/null
         install=`echo $?`
             if test $install = 1
                 then
@@ -55,7 +55,7 @@ yum info ${yumpluginsecurity} | grep installed > /dev/null
 echo ""
 echo "Verify the ${yumutils}"
 
-yum info ${yumutils} | grep installed > /dev/null
+yum info ${yumutils} | grep installed &> /dev/null
         install=`echo $?`
             if test $install = 1
                 then
@@ -67,7 +67,7 @@ yum info ${yumutils} | grep installed > /dev/null
 echo ""
 echo "Verify the ${ed}"
 
-yum info ${ed} | grep installed > /dev/null
+yum info ${ed} | grep installed &> /dev/null
         install=`echo $?`
             if test $install = 1
                 then
@@ -79,7 +79,7 @@ yum info ${ed} | grep installed > /dev/null
 echo ""
 echo "Verify the ${sysstat}"
 
-yum info ${sysstat} | grep installed > /dev/null
+yum info ${sysstat} | grep installed &> /dev/null
         install=`echo $?`
             if test $install = 1
                 then
@@ -92,7 +92,7 @@ echo ""
 
 echo "Verify the ${tcp_wrappers}"
 
-yum info ${tcp_wrappers} | grep installed > /dev/null
+yum info ${tcp_wrappers} | grep installed &> /dev/null
         install=`echo $?`
             if test $install = 1
                 then
@@ -196,35 +196,6 @@ audit2=$(echo $?)
       echo "0 5 * * * /usr/sbin/aide --check" >> aide_cron ; crontab aide_cron ; rm -y aide_cron
     fi
   fi
-
-echo "##############################################"
-echo "###         Secure Boot Settings           ###"
-echo "##############################################"
-sleep 2
-echo "Set User/Group Owner on /etc/grub.conf"
-stat -L -c "%u %g" /etc/grub.conf | egrep "0 0" > /dev/null
-permission=`echo $?`
-    if test $permission = 0
-        then
-            echo "Permission OK"
-        else
-            chown root:root /etc/grub.conf
-            echo "Permissions wrong, but it was corrected"
-    fi
-
-echo ""
-echo "Set Permissions on /etc/grub.conf"
-stat -L -c "%a" /etc/grub.conf | egrep ".00" > /dev/null
-permission=`echo $?`
-    if test $permission = 0
-        then
-            echo "Permission OK"
-        else
-            chmod og-rwx /etc/grub.conf
-            echo "Permissions wrong, but it was corrected"
-    fi
-echo ""
-
 ########################################
 ###             Variables            ###
 ########################################
