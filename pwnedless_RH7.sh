@@ -105,6 +105,27 @@ remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.repos.d/*"
     echo "gpgcheck is globally activated on files inside yum.repos.d directory"
   fi
 
+sleep 2
+echo ""
+echo ">>>> Ensure AIDE is installed"
+rpm -q aide
+audit=$(echo $?)
+
+  if [ $audit = 0 ]; then
+    echo "AIDE was installed"
+  else
+    echo "AIDE will be install...."
+    yum install aide -y &>/dev/null
+    echo "AIDE database is initializing, this may take a few minutes...be patient"
+    aide --init
+    mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+    echo "AIDE was installed successfully"
+  fi
+
+
+
+
+
 
 
 echo "##############################################"
