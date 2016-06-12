@@ -161,6 +161,20 @@ remediation="sed -i s/gpgcheck=0/gpgcheck=1/g /etc/yum.repos.d/*"
 
 sleep 2
 echo ""
+echo ">>>> Ensure AIDE is installed"
+rpm -q aide &>/dev/null
+audit=$(echo $?)
+
+  if [ $audit = 0 ]; then
+    echo "AIDE was installed"
+  else
+    echo "AIDE will be install...."
+    yum install aide -y &>/dev/null
+    echo "AIDE database is initializing, this may take a few minutes...be patient"
+    aide --init
+    mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+    echo "AIDE was installed successfully"
+  fi
 echo "##############################################"
 echo "###         Secure Boot Settings           ###"
 echo "##############################################"
