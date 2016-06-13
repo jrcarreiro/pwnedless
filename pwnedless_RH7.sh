@@ -234,80 +234,38 @@ echo "Authorized uses only. All activity may be monitored and reported." > /etc/
 echo "Authorized uses only. All activity may be monitored and reported." > /etc/issue.net
 echo "Authorized uses only. All activity may be monitored and reported." > /etc/motd
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-if [ -f $file_init.original ]
-        then
-            echo "The file already exists"
-        else
-            cp $file_init{,.original}
-            echo "Created file"
-    fi
-echo "###       Security Changes                 ###" >> $file_init
-echo "" >> $file_init
-echo ">> Require Authentication for Single-User Mode"
 sleep 2
-grep "SINGLE=/sbin/sulogin" $file_init > /dev/null
-parameter=`echo $?`
-    if test $parameter = 0
-        then
-            echo "- The parameter correct"
-        else
-            sed -i 's\SINGLE=/sbin/sushell\#SINGLE=/sbin/sushell\g' $file_init
-            echo "#Require Authentication for Single-User Mode" >> $file_init
-            echo "SINGLE=/sbin/sulogin" >> $file_init
-            echo "- The parameter fixed"
-    fi
+echo ""
+echo ">>>>  Ensure permissions on banner files are configured"
+#Variables
+issue_net="/etc/issue.net"
+issue="/etc/issue"
+motd="/etc/motd"
 
-echo ">> Disable Interactive Boot"
 sleep 2
-grep "PROMPT=no" $file_init > /dev/null
-parameter=`echo $?`
-    if test $parameter = 0
-        then
-            echo "- The parameter correct"
-        else
-            sed -i 's/PROMPT=yes/#PROMPT=yes/g' $file_init
-            echo "#Disable Interactive Boot" >> $file_init
-            echo "PROMPT=no" >> $file_init
-            echo "- The parameter fixed"
-    fi
+stat -L -c "%a %u %g" $motd | egrep ".44 0 0"  > /dev/null
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    chown root:root $motd
+    chmod 644 $motd
+    echo "Set User/Group Ownership on $motd"
+  fi
 
-echo ">> Set Daemon umask"
 sleep 2
-grep "umask 027" $file_init > /dev/null
-parameter=`echo $?`
-    if test $parameter = 0
-        then
-            echo "- The parameter correct"
-        else
-            echo "#Set Daemon umask" >> $file_init
-            echo "umask 027" >> $file_init
-            echo "- The parameter fixed"
-    fi
+stat -L -c "%a %u %g" $issue | egrep ".44 0 0"  > /dev/null
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    chown root:root $issue
+    chmod 644 $issue
+    echo "Set User/Group Ownership on $issue"
+  fi
 
-
-
-
-
-
-
-echo "##############################################"
-echo "###	installing pre requirements	 ###"
-echo "##############################################"
+sleep 2
+stat -L -c "%a %u %g" $issue_net | egrep ".44 0 0"  > /dev/null
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    chown root:root $issue_net
+    chmod 644 $issue_net
+    echo "Set User/Group Ownership on $issue_net"
+  fi
+echo ""
