@@ -509,6 +509,10 @@ echo ""
 echo "Reload service SSH"
 /etc/init.d/sshd reload
 
+echo "##############################################"
+echo "###     Verifiy Permissions                ###"
+echo "##############################################"
+#Banners Files
 ########################################
 ###             Variables            ###
 ########################################
@@ -517,11 +521,51 @@ issue_net="/etc/issue.net"
 issue="/etc/issue"
 motd="/etc/motd"
 
+echo "Set User/Group Ownership on $motd"
+sleep 2
+stat -L -c "%a %u %g" $motd | egrep ".44 0 0"  > /dev/null
+permission=`echo $?`
+    if test $permission = 0
+        then
+            echo "Permissions OK"
+        else
+            chown root:root $motd
+            chmod 644 $motd
+            echo "Permissions wrong, but it was corrected"
+    fi
 
+echo ""
 
-echo "##############################################"
-echo "###     Verifiy Permissions                ###"
-echo "##############################################"
+echo "Set User/Group Ownership on $issue"
+sleep 2
+stat -L -c "%a %u %g" $issue | egrep ".44 0 0"  > /dev/null
+permission=`echo $?`
+    if test $permission = 0
+        then
+            echo "Permissions OK"
+        else
+            chown root:root $issue
+            chmod 644 $issue
+            echo "Permissions wrong, but it was corrected"
+    fi
+
+echo ""
+
+echo "Set User/Group Ownership on $issue_net"
+sleep 2
+stat -L -c "%a %u %g" $issue_net | egrep ".44 0 0"  > /dev/null
+permission=`echo $?`
+    if test $permission = 0
+        then
+            echo "Permissions OK"
+        else
+            chown root:root $issue_net
+            chmod 644 $issue_net
+            echo "Permissions wrong, but it was corrected"
+    fi
+
+echo ""
+
 ##############################################
 ###     Configure cron and anacron          ##
 ##############################################
@@ -682,55 +726,6 @@ dir="/etc/group"
 /bin/chown root:root $dir
 ls -l $dir | awk '{print $1, $3, $4, $9}' > /dev/null
 sleep 2
-
-##############################################
-###     Configure password files            ##
-##############################################
-
-echo "Set User/Group Ownership on $motd"
-sleep 2
-stat -L -c "%a %u %g" $motd | egrep ".44 0 0"  > /dev/null
-permission=`echo $?`
-    if test $permission = 0
-        then
-            echo "Permissions OK"
-        else
-            chown root:root $motd
-            chmod 644 $motd
-            echo "Permissions wrong, but it was corrected"
-    fi
-
-echo ""
-
-echo "Set User/Group Ownership on $issue"
-sleep 2
-stat -L -c "%a %u %g" $issue | egrep ".44 0 0"  > /dev/null
-permission=`echo $?`
-    if test $permission = 0
-        then
-            echo "Permissions OK"
-        else
-            chown root:root $issue
-            chmod 644 $issue
-            echo "Permissions wrong, but it was corrected"
-    fi
-
-echo ""
-
-echo "Set User/Group Ownership on $issue_net"
-sleep 2
-stat -L -c "%a %u %g" $issue_net | egrep ".44 0 0"  > /dev/null
-permission=`echo $?`
-    if test $permission = 0
-        then
-            echo "Permissions OK"
-        else
-            chown root:root $issue_net
-            chmod 644 $issue_net
-            echo "Permissions wrong, but it was corrected"
-    fi
-
-echo ""
 
 ########################################
 ###             Variables            ###
