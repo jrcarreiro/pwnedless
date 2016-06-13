@@ -214,6 +214,7 @@ audit=$(sysctl fs.suid_dumpable | awk '{print $3}')
   fi
 
 sleep 2
+echo ""
 echo ">>>> Ensure address space layout randomization (ASLR) is enabled"
 file="/etc/sysctl.d/72-aslr-pwnedless.conf"
 audit=$(sysctl kernel.randomize_va_space| awk '{print $3}')
@@ -224,6 +225,14 @@ audit=$(sysctl kernel.randomize_va_space| awk '{print $3}')
     echo "kernel.randomize_va_space = 2" >> $file
     sysctl -w kernel.randomize_va_space=2 &>/dev/null
   fi
+
+sleep 2
+echo ""
+echo "Warning Banners"
+echo ">>>> Set Warning Banner for Standard Login Services"
+echo "Authorized uses only. All activity may be monitored and reported." > /etc/issue
+echo "Authorized uses only. All activity may be monitored and reported." > /etc/issue.net
+echo "Authorized uses only. All activity may be monitored and reported." > /etc/motd
 
 
 
