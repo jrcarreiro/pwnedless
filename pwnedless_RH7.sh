@@ -273,3 +273,38 @@ echo ""
 echo "##############################################"
 echo "###	        Services      	           ###"
 echo "##############################################"
+
+echo "Time Synchronization"
+sleep 2
+echo ">>> Ensure ntp is configured"
+ntp_conf="/etc/ntp.conf"
+ntpd_conf="/etc/sysconfig/ntpd"
+file_remediation="/tmp/remediation.txt"
+file_audit="/tmp/audit.txt"
+#audit
+echo "restrict -4 default kod nomodify notrap nopeer noquery" > $file_remediation
+echo "restrict -6 default kod nomodify notrap nopeer noquery" >> $file_remediation
+grep "^restrict" $ntp_conf | head -1 > $file_audit
+grep "^restrict" $ntp_conf | tail -n+2 >> $file_audit
+sed -i 's/ *$//' $file_audit
+diff $file_remediation $file_audit > /dev/null
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    sed -i s/"restrict ::1"//g $ntp_conf
+    sed -i s/"$(grep "^restrict" $ntp_conf | head -1)"/"restrict -4 default kod nomodify notrap nopeer noquery"/g $ntp_conf
+    sed -i s/"$(grep "^restrict" $ntp_conf | tail -n+2)"/"restrict -6 default kod nomodify notrap nopeer noquery"/g $ntp_conf
+    echo "$ntp_conf was configured"
+  fi
+rm -Rf $file_remediation $file_audit
+
+#audit
+
+echo "OPTIONS="-u ntp:ntp"" >> $file_remediation
+grep "^OPTIONS" $ntpd_conf > $file_audit
+diff -q $file_remediation $file_audit > /dev/null
+audit=$(echo $?)
+  if [ $audit = 1 ]; then
+    sed -i s/$(grep "^OPTIONS" $ntpd_conf)/'OPTIONS="-u ntp:ntp"'/g  $ntpd_conf
+    echo "$ntpd_conf was configured"
+  fi
+rm -Rf $file_remediation $file_audit
